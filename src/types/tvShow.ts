@@ -10,3 +10,11 @@ export type TvShowInput = {
   description: string;
   recommendedAge: number;
 };
+
+export type TvShowApiResponse = {
+  "@key": string;
+  "@assetType": string;
+  title: string;
+  description: string;
+  recommendedAge: number;
+};
