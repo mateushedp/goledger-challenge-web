@@ -1,7 +1,7 @@
 import { apiFetch } from "./api";
-import { TvShow, TvShowInput } from "@/types/tvShow";
+import { TvShow, TvShowInput, TvShowApiResponse } from "@/types/tvShow";
 
-function mapTvShow(item: any): TvShow {
+function mapTvShow(item: TvShowApiResponse): TvShow {
 	return {
 		key: item["@key"],
 		title: item.title,
