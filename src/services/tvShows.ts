@@ -1,5 +1,7 @@
 import { apiFetch } from "./api";
 import { TvShow, TvShowInput, TvShowApiResponse } from "@/types/tvShow";
+import { deleteEpisode } from "./episodes";
+import { getSeasonsWithEpisodes } from "./seasons";
 
 function mapTvShow(item: TvShowApiResponse): TvShow {
 	return {
@@ -59,6 +61,27 @@ export async function createTvShow(input: TvShowInput): Promise<TvShow> {
 }
 
 export async function deleteTvShow(key: string): Promise<void> {
+	const seasons = await getSeasonsWithEpisodes(key);
+
+	for (const season of seasons) {
+		for (const episode of season.episodes) {
+			await deleteEpisode(episode.episodeNumber, season.key);
+		}
+
+		await apiFetch("/api/invoke/deleteAsset", {
+			method: "POST",
+			body: JSON.stringify({
+				key: {
+					"@assetType": "seasons",
+					number: season.number,
+					tvShow: {
+						"@key": key,
+					},
+				},
+			}),
+		});
+	}
+
 	await apiFetch("/api/invoke/deleteAsset", {
 		method: "POST",
 		body: JSON.stringify({

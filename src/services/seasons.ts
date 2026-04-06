@@ -1,6 +1,6 @@
 import { apiFetch } from "./api";
 import type { Season, SeasonInput, SeasonApiResponse, SeasonWithEpisodes } from "@/types/seasons";
-import { getEpisodes } from "./episodes";
+import { deleteEpisode, getEpisodes } from "./episodes";
 
 function mapSeason(item: SeasonApiResponse): Season {
 	return {
@@ -76,6 +76,17 @@ export async function updateSeason(input: SeasonInput): Promise<Season> {
 }
 
 export async function deleteSeason(number: number, tvShowKey: string): Promise<void> {
+	const seasons = await getSeasons(tvShowKey);
+	const season = seasons.find(s => s.number === number);
+
+	if (season) {
+		const episodes = await getEpisodes(season.key);
+
+		for (const episode of episodes) {
+			await deleteEpisode(episode.episodeNumber, season.key);
+		}
+	}
+
 	await apiFetch("/api/invoke/deleteAsset", {
 		method: "POST",
 		body: JSON.stringify({
@@ -89,3 +100,4 @@ export async function deleteSeason(number: number, tvShowKey: string): Promise<v
 		}),
 	});
 }
+
