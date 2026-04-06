@@ -1,6 +1,6 @@
 import { ReactNode, ButtonHTMLAttributes } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "error";
+type ButtonVariant = "primary" | "secondary" | "destructive";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	variant?: ButtonVariant;
@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variantStyles: Record<ButtonVariant, string> = {
 	primary: "bg-[#00DAF3]",
 	secondary: "bg-[#E9C349]",
-	error: "bg-[#FFB4AB]",
+	destructive: "bg-[#FFB4AB]",
 };
 
 export default function Button({
