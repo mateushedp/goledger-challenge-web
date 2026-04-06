@@ -145,6 +145,7 @@ function TvShowDetails() {
 
 			toast.success("Season deleted successfully");
 			await loadData();
+			setActiveSeason(sortedSeasons[0]?.number);
 			setOpenDeleteSeason(false);
 		} catch (err) {
 			toast.error("Failed to delete season");
