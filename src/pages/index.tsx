@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export default function Home() {
 	const router = useRouter();
@@ -45,6 +46,7 @@ export default function Home() {
 			setShows(data);
 		} catch (err) {
 			setError("Failed to load TV shows.");
+			toast.error("Failed to load TV shows");
 		} finally {
 			setIsLoading(false);
 			setIsSubmitting(false);
@@ -55,16 +57,22 @@ export default function Home() {
 		setIsSubmitting(true);
 		e.preventDefault();
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await createTvShow({
-			title: String(formData.get("title")),
-			description: String(formData.get("description")),
-			recommendedAge: Number(formData.get("recommendedAge")),
-		});
+			await createTvShow({
+				title: String(formData.get("title")),
+				description: String(formData.get("description")),
+				recommendedAge: Number(formData.get("recommendedAge")),
+			});
 
-		setOpenAdd(false);
-		loadShows();
+			toast.success("TV Show created successfully");
+			setOpenAdd(false);
+			loadShows();
+		} catch (err) {
+			toast.error("Failed to create TV Show");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleEdit(e: React.FormEvent<HTMLFormElement>) {
@@ -73,33 +81,44 @@ export default function Home() {
 
 		if (!selectedShow) return;
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await updateTvShow(selectedShow.key, {
-			title: selectedShow.title,
-			description: String(formData.get("description")),
-			recommendedAge: Number(formData.get("recommendedAge")),
-		});
+			await updateTvShow(selectedShow.key, {
+				title: selectedShow.title,
+				description: String(formData.get("description")),
+				recommendedAge: Number(formData.get("recommendedAge")),
+			});
 
-		setOpenEdit(false);
-		loadShows();
+			toast.success("TV Show updated successfully");
+			setOpenEdit(false);
+			loadShows();
+		} catch (err) {
+			toast.error("Failed to update TV Show");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleDeleteConfirm() {
 		setIsSubmitting(true);
 		if (!selectedShow) return;
 
-		await deleteTvShow(selectedShow.key);
+		try {
+			await deleteTvShow(selectedShow.key);
 
-		setOpenDelete(false);
-		loadShows();
+			toast.success("TV Show deleted successfully");
+			setOpenDelete(false);
+			loadShows();
+		} catch (err) {
+			toast.error("Failed to delete TV Show");
+			setIsSubmitting(false);
+		}
 	}
 
 	if (isLoading) return <Spinner />;
 
 	return (
 		<div className="p-6">
-
 			<Dialog open={openAdd} onOpenChange={setOpenAdd}>
 				<DialogContent>
 					<DialogHeader>
@@ -173,7 +192,6 @@ export default function Home() {
 			<h1 className="text-4xl text-headline font-bold">Browse TV Shows</h1>
 			<h2 className="mb-4 text-body">Click a TV Show to see details.</h2>
 
-
 			<div className="flex flex-col md:grid md:grid-cols-4 md:gap-6">
 				{shows.map((show) => (
 					<div key={show.key}>
@@ -216,7 +234,6 @@ export default function Home() {
 					Add New TV Show
 				</Button>
 			</div>
-
 		</div>
 	);
 }

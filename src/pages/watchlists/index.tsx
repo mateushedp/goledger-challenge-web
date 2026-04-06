@@ -7,16 +7,10 @@ import { WatchlistItem } from "@/components/WatchlistItem";
 import Spinner from "@/components/Spinner";
 import Button from "@/components/Button";
 import { Plus, Edit, Trash } from "lucide-react";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogFooter,
-	DialogClose
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 export default function WatchlistPage() {
 	const [data, setData] = useState<Watchlist[]>([]);
@@ -33,10 +27,7 @@ export default function WatchlistPage() {
 
 	async function loadData() {
 		try {
-			const [w, s] = await Promise.all([
-				getWatchlists(),
-				getTvShows(),
-			]);
+			const [w, s] = await Promise.all([getWatchlists(), getTvShows()]);
 
 			setData(w);
 			setShows(s);
@@ -48,6 +39,7 @@ export default function WatchlistPage() {
 			setShowsMap(map);
 		} catch (err) {
 			console.error("Failed to load data:", err);
+			toast.error("Failed to load data");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -67,16 +59,22 @@ export default function WatchlistPage() {
 		e.preventDefault();
 		setIsSubmitting(true);
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await createWatchlist({
-			title: String(formData.get("title")),
-			description: String(formData.get("description")),
-			tvShows: [],
-		});
+			await createWatchlist({
+				title: String(formData.get("title")),
+				description: String(formData.get("description")),
+				tvShows: [],
+			});
 
-		await loadData();
-		setOpenCreate(false);
+			toast.success("Watchlist created successfully");
+			await loadData();
+			setOpenCreate(false);
+		} catch (err) {
+			toast.error("Failed to create watchlist");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleEdit(e: React.FormEvent<HTMLFormElement>) {
@@ -85,16 +83,22 @@ export default function WatchlistPage() {
 
 		setIsSubmitting(true);
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await updateWatchlist({
-			title: selected.title,
-			description: String(formData.get("description")),
-			tvShows: selected.tvShows,
-		});
+			await updateWatchlist({
+				title: selected.title,
+				description: String(formData.get("description")),
+				tvShows: selected.tvShows,
+			});
 
-		await loadData();
-		setOpenEdit(false);
+			toast.success("Watchlist updated successfully");
+			await loadData();
+			setOpenEdit(false);
+		} catch (err) {
+			toast.error("Failed to update watchlist");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleDelete() {
@@ -102,20 +106,24 @@ export default function WatchlistPage() {
 
 		setIsSubmitting(true);
 
-		await deleteWatchlist(selected.title);
+		try {
+			await deleteWatchlist(selected.title);
 
-		await loadData();
-		setOpenDelete(false);
+			toast.success("Watchlist deleted successfully");
+			await loadData();
+			setOpenDelete(false);
+		} catch (err) {
+			toast.error("Failed to delete watchlist");
+			setIsSubmitting(false);
+		}
 	}
 
 	function toggleShow(showKey: string) {
 		if (!selected) return;
 
-		const exists = selected.tvShows.some(s => s["@key"] === showKey);
+		const exists = selected.tvShows.some((s) => s["@key"] === showKey);
 
-		const updated = exists
-			? selected.tvShows.filter(s => s["@key"] !== showKey)
-			: [...selected.tvShows, { "@key": showKey }];
+		const updated = exists ? selected.tvShows.filter((s) => s["@key"] !== showKey) : [...selected.tvShows, { "@key": showKey }];
 
 		setSelected({
 			...selected,
@@ -127,7 +135,6 @@ export default function WatchlistPage() {
 
 	return (
 		<div>
-
 			<Dialog open={openCreate} onOpenChange={setOpenCreate}>
 				<DialogContent>
 					<DialogHeader>
@@ -147,9 +154,13 @@ export default function WatchlistPage() {
 
 						<DialogFooter>
 							<DialogClose asChild>
-								<Button variant="secondary" disabled={isSubmitting}>Cancel</Button>
+								<Button variant="secondary" disabled={isSubmitting}>
+									Cancel
+								</Button>
 							</DialogClose>
-							<Button type="submit" isLoading={isSubmitting}>Create</Button>
+							<Button type="submit" isLoading={isSubmitting}>
+								Create
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -169,10 +180,7 @@ export default function WatchlistPage() {
 
 						<div className="space-y-2">
 							<Label>Description</Label>
-							<Input
-								name="description"
-								defaultValue={selected?.description}
-							/>
+							<Input name="description" defaultValue={selected?.description} />
 						</div>
 
 						<div className="space-y-2">
@@ -180,14 +188,12 @@ export default function WatchlistPage() {
 							<div className="max-h-[200px] overflow-y-auto space-y-2 pr-2">
 								{[...shows]
 									.sort((a, b) => {
-										const aIn = selected?.tvShows.some(s => s["@key"] === a.key) ? 1 : 0;
-										const bIn = selected?.tvShows.some(s => s["@key"] === b.key) ? 1 : 0;
+										const aIn = selected?.tvShows.some((s) => s["@key"] === a.key) ? 1 : 0;
+										const bIn = selected?.tvShows.some((s) => s["@key"] === b.key) ? 1 : 0;
 										return bIn - aIn;
 									})
 									.map((show) => {
-										const active = selected?.tvShows.some(
-											s => s["@key"] === show.key
-										);
+										const active = selected?.tvShows.some((s) => s["@key"] === show.key);
 
 										return (
 											<button
@@ -208,9 +214,13 @@ export default function WatchlistPage() {
 
 						<DialogFooter>
 							<DialogClose asChild>
-								<Button variant="secondary" disabled={isSubmitting}>Cancel</Button>
+								<Button variant="secondary" disabled={isSubmitting}>
+									Cancel
+								</Button>
 							</DialogClose>
-							<Button type="submit" isLoading={isSubmitting}>Save</Button>
+							<Button type="submit" isLoading={isSubmitting}>
+								Save
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -226,7 +236,9 @@ export default function WatchlistPage() {
 
 					<DialogFooter>
 						<DialogClose asChild>
-							<Button variant="secondary" disabled={isSubmitting}>Cancel</Button>
+							<Button variant="secondary" disabled={isSubmitting}>
+								Cancel
+							</Button>
 						</DialogClose>
 						<Button variant="destructive" onClick={handleDelete} isLoading={isSubmitting}>
 							Delete
@@ -240,21 +252,9 @@ export default function WatchlistPage() {
 				<h2 className="mb-4 text-body">Manage and browse your series collections.</h2>
 			</div>
 
-			<div
-				className="
-					grid grid-cols-1
-					md:grid-cols-2
-					gap-6
-					justify-items-center md:justify-items-stretch
-					px-2 md:px-8 py-12
-				"
-			>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-items-center md:justify-items-stretch px-2 md:px-8 py-12">
 				{data.map((w) => (
-					<WatchlistItem
-						key={w.key}
-						watchlist={w}
-						showsMap={showsMap}
-					>
+					<WatchlistItem key={w.key} watchlist={w} showsMap={showsMap}>
 						<Button
 							variant="secondary"
 							icon={<Edit />}

@@ -28,6 +28,7 @@ import {
 	updateEpisode,
 	deleteEpisode,
 } from "@/services/episodes";
+import { toast } from "sonner";
 
 function TvShowDetails() {
 	const router = useRouter();
@@ -60,6 +61,7 @@ function TvShowDetails() {
 			setTvShow(show);
 		} catch (err) {
 			console.error("Failed to load data:", err);
+			toast.error("Failed to load data");
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -77,16 +79,11 @@ function TvShowDetails() {
 		init();
 	}, [showKey]);
 
-	const sortedSeasons = [...seasonsArray].sort(
-		(a, b) => a.number - b.number
-	);
+	const sortedSeasons = [...seasonsArray].sort((a, b) => a.number - b.number);
 
-	const effectiveSeason =
-		activeSeason ?? sortedSeasons[0]?.number;
+	const effectiveSeason = activeSeason ?? sortedSeasons[0]?.number;
 
-	const selectedSeason = sortedSeasons.find(
-		(s) => s.number === effectiveSeason
-	);
+	const selectedSeason = sortedSeasons.find((s) => s.number === effectiveSeason);
 
 	const episodes = (selectedSeason?.episodes ?? [])
 		.slice()
@@ -96,16 +93,22 @@ function TvShowDetails() {
 		e.preventDefault();
 		setIsSubmitting(true);
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await createSeason({
-			number: Number(formData.get("number")),
-			tvShow: { "@key": showKey },
-			year: Number(formData.get("year")),
-		});
+			await createSeason({
+				number: Number(formData.get("number")),
+				tvShow: { "@key": showKey },
+				year: Number(formData.get("year")),
+			});
 
-		await loadData();
-		setOpenAddSeason(false);
+			toast.success("Season created successfully");
+			await loadData();
+			setOpenAddSeason(false);
+		} catch (err) {
+			toast.error("Failed to create season");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleEditSeason(e: React.FormEvent<HTMLFormElement>) {
@@ -114,16 +117,22 @@ function TvShowDetails() {
 
 		setIsSubmitting(true);
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await updateSeason({
-			number: selectedSeason.number,
-			tvShow: { "@key": showKey },
-			year: Number(formData.get("year")),
-		});
+			await updateSeason({
+				number: selectedSeason.number,
+				tvShow: { "@key": showKey },
+				year: Number(formData.get("year")),
+			});
 
-		await loadData();
-		setOpenEditSeason(false);
+			toast.success("Season updated successfully");
+			await loadData();
+			setOpenEditSeason(false);
+		} catch (err) {
+			toast.error("Failed to update season");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleDeleteSeason() {
@@ -131,10 +140,16 @@ function TvShowDetails() {
 
 		setIsSubmitting(true);
 
-		await deleteSeason(selectedSeason.number, showKey);
+		try {
+			await deleteSeason(selectedSeason.number, showKey);
 
-		await loadData();
-		setOpenDeleteSeason(false);
+			toast.success("Season deleted successfully");
+			await loadData();
+			setOpenDeleteSeason(false);
+		} catch (err) {
+			toast.error("Failed to delete season");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleAddEpisode(e: React.FormEvent<HTMLFormElement>) {
@@ -143,23 +158,25 @@ function TvShowDetails() {
 
 		setIsSubmitting(true);
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await createEpisode({
-			season: { "@key": selectedSeason.key },
-			episodeNumber: Number(formData.get("episodeNumber")),
-			title: String(formData.get("title")),
-			releaseDate: new Date(
-				String(formData.get("releaseDate"))
-			).toISOString(),
-			description: String(formData.get("description")),
-			rating: formData.get("rating")
-				? Number(formData.get("rating"))
-				: undefined,
-		});
+			await createEpisode({
+				season: { "@key": selectedSeason.key },
+				episodeNumber: Number(formData.get("episodeNumber")),
+				title: String(formData.get("title")),
+				releaseDate: new Date(String(formData.get("releaseDate"))).toISOString(),
+				description: String(formData.get("description")),
+				rating: formData.get("rating") ? Number(formData.get("rating")) : undefined,
+			});
 
-		await loadData();
-		setOpenAddEpisode(false);
+			toast.success("Episode created successfully");
+			await loadData();
+			setOpenAddEpisode(false);
+		} catch (err) {
+			toast.error("Failed to create episode");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleEditEpisode(e: React.FormEvent<HTMLFormElement>) {
@@ -168,23 +185,25 @@ function TvShowDetails() {
 
 		setIsSubmitting(true);
 
-		const formData = new FormData(e.currentTarget);
+		try {
+			const formData = new FormData(e.currentTarget);
 
-		await updateEpisode({
-			season: { "@key": selectedSeason.key },
-			episodeNumber: selectedEpisode.episodeNumber,
-			title: String(formData.get("title")),
-			releaseDate: new Date(
-				String(formData.get("releaseDate"))
-			).toISOString(),
-			description: String(formData.get("description")),
-			rating: formData.get("rating")
-				? Number(formData.get("rating"))
-				: undefined,
-		});
+			await updateEpisode({
+				season: { "@key": selectedSeason.key },
+				episodeNumber: selectedEpisode.episodeNumber,
+				title: String(formData.get("title")),
+				releaseDate: new Date(String(formData.get("releaseDate"))).toISOString(),
+				description: String(formData.get("description")),
+				rating: formData.get("rating") ? Number(formData.get("rating")) : undefined,
+			});
 
-		await loadData();
-		setOpenEditEpisode(false);
+			toast.success("Episode updated successfully");
+			await loadData();
+			setOpenEditEpisode(false);
+		} catch (err) {
+			toast.error("Failed to update episode");
+			setIsSubmitting(false);
+		}
 	}
 
 	async function handleDeleteEpisode() {
@@ -192,13 +211,16 @@ function TvShowDetails() {
 
 		setIsSubmitting(true);
 
-		await deleteEpisode(
-			selectedEpisode.episodeNumber,
-			selectedSeason.key
-		);
+		try {
+			await deleteEpisode(selectedEpisode.episodeNumber, selectedSeason.key);
 
-		await loadData();
-		setOpenDeleteEpisode(false);
+			toast.success("Episode deleted successfully");
+			await loadData();
+			setOpenDeleteEpisode(false);
+		} catch (err) {
+			toast.error("Failed to delete episode");
+			setIsSubmitting(false);
+		}
 	}
 
 	if (isLoading) {
@@ -221,7 +243,9 @@ function TvShowDetails() {
 							<Button variant="secondary" type="button" onClick={() => setOpenAddSeason(false)} disabled={isSubmitting}>
 								Cancel
 							</Button>
-							<Button type="submit" isLoading={isSubmitting}>Save</Button>
+							<Button type="submit" isLoading={isSubmitting}>
+								Save
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -240,7 +264,9 @@ function TvShowDetails() {
 							<Button variant="secondary" type="button" onClick={() => setOpenEditSeason(false)} disabled={isSubmitting}>
 								Cancel
 							</Button>
-							<Button type="submit" isLoading={isSubmitting}>Save</Button>
+							<Button type="submit" isLoading={isSubmitting}>
+								Save
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -253,8 +279,7 @@ function TvShowDetails() {
 					</DialogHeader>
 
 					<p className="mt-4 text-sm text-body">
-						Are you sure you want to delete season{" "}
-						<strong>{selectedSeason?.number}</strong>?
+						Are you sure you want to delete season <strong>{selectedSeason?.number}</strong>?
 					</p>
 
 					<DialogFooter className="mt-6">
@@ -282,8 +307,12 @@ function TvShowDetails() {
 						<Input name="rating" type="number" placeholder="Rating" />
 
 						<DialogFooter>
-							<Button variant="secondary" type="button" onClick={() => setOpenAddEpisode(false)} disabled={isSubmitting}>Cancel</Button>
-							<Button type="submit" isLoading={isSubmitting}>Save</Button>
+							<Button variant="secondary" type="button" onClick={() => setOpenAddEpisode(false)} disabled={isSubmitting}>
+								Cancel
+							</Button>
+							<Button type="submit" isLoading={isSubmitting}>
+								Save
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -303,8 +332,12 @@ function TvShowDetails() {
 						<Input name="rating" type="number" defaultValue={selectedEpisode?.rating} />
 
 						<DialogFooter>
-							<Button variant="secondary" type="button" onClick={() => setOpenEditEpisode(false)} disabled={isSubmitting}>Cancel</Button>
-							<Button type="submit" isLoading={isSubmitting}>Save</Button>
+							<Button variant="secondary" type="button" onClick={() => setOpenEditEpisode(false)} disabled={isSubmitting}>
+								Cancel
+							</Button>
+							<Button type="submit" isLoading={isSubmitting}>
+								Save
+							</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -316,12 +349,12 @@ function TvShowDetails() {
 						<DialogTitle>Delete Episode</DialogTitle>
 					</DialogHeader>
 
-					<p className="mt-4 text-sm text-body">
-						Delete episode {selectedEpisode?.episodeNumber}?
-					</p>
+					<p className="mt-4 text-sm text-body">Delete episode {selectedEpisode?.episodeNumber}?</p>
 
 					<DialogFooter className="mt-6">
-						<Button variant="secondary" onClick={() => setOpenDeleteEpisode(false)} disabled={isSubmitting}>Cancel</Button>
+						<Button variant="secondary" onClick={() => setOpenDeleteEpisode(false)} disabled={isSubmitting}>
+							Cancel
+						</Button>
 						<Button variant="destructive" onClick={handleDeleteEpisode} isLoading={isSubmitting}>
 							Delete
 						</Button>
@@ -330,29 +363,21 @@ function TvShowDetails() {
 			</Dialog>
 
 			<div className="px-8 pt-12 pb-16 border-b border-[#45474b]/20">
-				<p className="text-[10px] font-extrabold uppercase text-body">
-					recommended age: {tvShow?.recommendedAge}
-				</p>
+				<p className="text-[10px] font-extrabold uppercase text-body">recommended age: {tvShow?.recommendedAge}</p>
 
 				<h1 className="mt-[55px] text-[60px] md:text-[144px] font-extrabold uppercase italic leading-none text-headline">
 					{tvShow?.title}
 				</h1>
 
 				<div className="mt-[40px] text-[11px] font-bold uppercase">
-					<span className="text-primary">
-						{seasonsArray.length} seasons
-					</span>
+					<span className="text-primary">{seasonsArray.length} seasons</span>
 				</div>
 
-				<p className="mt-[40px] md:mr-[268px] text-[16px] md:text-[24px] font-light text-body">
-					{tvShow?.description}
-				</p>
+				<p className="mt-[40px] md:mr-[268px] text-[16px] md:text-[24px] font-light text-body">{tvShow?.description}</p>
 			</div>
 
 			<div className="h-[49px] flex items-center justify-between px-8 border-b border-[#45474b]/20">
-				<span className="text-[12px] font-extrabold uppercase text-body">
-					seasons
-				</span>
+				<span className="text-[12px] font-extrabold uppercase text-body">seasons</span>
 
 				<div className="flex items-center gap-6">
 					<div className="flex gap-4">
@@ -363,9 +388,7 @@ function TvShowDetails() {
 								<button
 									key={season.key}
 									onClick={() => setActiveSeason(season.number)}
-									className={`text-[12px] font-bold uppercase pb-1 ${isActive
-										? "text-primary border-b border-primary"
-										: "text-body"
+									className={`text-[12px] font-bold uppercase pb-1 ${isActive ? "text-primary border-b border-primary" : "text-body"
 										}`}
 								>
 									{season.number}
@@ -378,10 +401,7 @@ function TvShowDetails() {
 						Add Season
 					</Button>
 				</div>
-
-
 			</div>
-
 
 			<div className="mt-4 md:h-[49px] flex flex-col md:flex-row items-start md:items-center justify-end gap-2 px-8 border-b border-[#45474b]/20">
 				{selectedSeason && (
@@ -400,14 +420,10 @@ function TvShowDetails() {
 					</>
 				)}
 			</div>
-			<span className="md:ml-8 text-[12px] font-extrabold uppercase text-body">
-				season released: {selectedSeason?.year}
-			</span>
+			<span className="md:ml-8 text-[12px] font-extrabold uppercase text-body">season released: {selectedSeason?.year}</span>
 
 			{!episodes.length ? (
-				<p className="text-[14px] font-extrabold text-center my-5 italic text-body">
-					No episodes found.
-				</p>
+				<p className="text-[14px] font-extrabold text-center my-5 italic text-body">No episodes found.</p>
 			) : (
 				<div className="px-2 md:px-8 my-12 md:py-12 space-y-0">
 					{episodes.map((ep) => (
