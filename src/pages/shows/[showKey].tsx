@@ -399,7 +399,8 @@ function TvShowDetails() {
 					</div>
 
 					<Button icon={<Plus />} onClick={() => setOpenAddSeason(true)}>
-						Add Season
+						<span className="hidden md:flex">Add Season</span>
+
 					</Button>
 				</div>
 			</div>
@@ -421,7 +422,7 @@ function TvShowDetails() {
 					</>
 				)}
 			</div>
-			<span className="md:ml-8 text-[12px] font-extrabold uppercase text-body">season released: {selectedSeason?.year}</span>
+			<span className="mt-4 ml-8 text-[12px] font-extrabold uppercase text-body">season released: {selectedSeason?.year}</span>
 
 			{!episodes.length ? (
 				<p className="text-[14px] font-extrabold text-center my-5 italic text-body">No episodes found.</p>

@@ -8,7 +8,7 @@ type Props = {
 
 export function EpisodeItem({ episode, children }: Props) {
 	return (
-		<div className="md:h-[212px] my-8 md:my-0 flex flex-col px-2 md:px-8">
+		<div className="md:h-[212px] my-8 md:my-4 flex flex-col px-2 md:px-8">
 
 			<div className="flex items-center md:items-start">
 				<div className="md:ml-[24px] md:mr-[40px] mr-4 text-[18px] md:text-[36px] font-extrabold italic text-[#27272A]">
@@ -37,7 +37,7 @@ export function EpisodeItem({ episode, children }: Props) {
 
 			{children && (
 				<div
-					className="mt-auto flex gap-2 pt-4"
+					className="mt-auto md:ml-[80px] flex gap-2 pt-4"
 					onClick={(e) => e.stopPropagation()}
 				>
 					{children}
