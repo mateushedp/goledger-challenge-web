@@ -3,11 +3,13 @@ import { format, parseISO } from "date-fns";
 
 type Props = {
 	episode: Episode;
+	children?: React.ReactNode;
 };
 
-export function EpisodeItem({ episode }: Props) {
+export function EpisodeItem({ episode, children }: Props) {
 	return (
-		<div className="md:h-[212px] my-8 md:my-0 flex flex-col justify-center px-2 md:px-8">
+		<div className="md:h-[212px] my-8 md:my-0 flex flex-col px-2 md:px-8">
+
 			<div className="flex items-center md:items-start">
 				<div className="md:ml-[24px] md:mr-[40px] mr-4 text-[18px] md:text-[36px] font-extrabold italic text-[#27272A]">
 					{episode.episodeNumber}
@@ -23,10 +25,7 @@ export function EpisodeItem({ episode }: Props) {
 				</div>
 
 				<div className="ml-auto text-[11px] font-bold uppercase whitespace-nowrap flex-shrink-0">
-					score:{" "}
-					<span className="text-primary">
-						{episode.rating ?? "-"}
-					</span>
+					score: <span className="text-primary">{episode.rating ?? "-"}</span>
 				</div>
 			</div>
 
@@ -35,6 +34,15 @@ export function EpisodeItem({ episode }: Props) {
 					{episode.description}
 				</p>
 			</div>
+
+			{children && (
+				<div
+					className="mt-auto flex gap-2 pt-4"
+					onClick={(e) => e.stopPropagation()}
+				>
+					{children}
+				</div>
+			)}
 		</div>
 	);
 }
