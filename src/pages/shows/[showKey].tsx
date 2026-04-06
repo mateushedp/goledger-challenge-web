@@ -197,7 +197,7 @@ function TvShowDetails() {
 						<Input name="year" type="number" placeholder="Year" />
 
 						<DialogFooter>
-							<Button variant="destructive" type="button" onClick={() => setOpenAddSeason(false)}>
+							<Button variant="secondary" type="button" onClick={() => setOpenAddSeason(false)}>
 								Cancel
 							</Button>
 							<Button type="submit">Save</Button>
@@ -220,7 +220,7 @@ function TvShowDetails() {
 						/>
 
 						<DialogFooter>
-							<Button variant="destructive" type="button" onClick={() => setOpenEditSeason(false)}>
+							<Button variant="secondary" type="button" onClick={() => setOpenEditSeason(false)}>
 								Cancel
 							</Button>
 							<Button type="submit">Save</Button>
@@ -241,10 +241,10 @@ function TvShowDetails() {
 					</p>
 
 					<DialogFooter className="mt-6">
-						<Button variant="destructive" onClick={() => setOpenDeleteSeason(false)}>
+						<Button variant="secondary" onClick={() => setOpenDeleteSeason(false)}>
 							Cancel
 						</Button>
-						<Button onClick={handleDeleteSeason}>
+						<Button variant="destructive" onClick={handleDeleteSeason}>
 							Delete
 						</Button>
 					</DialogFooter>
@@ -265,7 +265,7 @@ function TvShowDetails() {
 						<Input name="rating" type="number" placeholder="Rating" />
 
 						<DialogFooter>
-							<Button type="button" onClick={() => setOpenAddEpisode(false)}>Cancel</Button>
+							<Button variant="secondary" type="button" onClick={() => setOpenAddEpisode(false)}>Cancel</Button>
 							<Button type="submit">Save</Button>
 						</DialogFooter>
 					</form>
@@ -295,7 +295,7 @@ function TvShowDetails() {
 						<Input name="rating" type="number" defaultValue={selectedEpisode?.rating} />
 
 						<DialogFooter>
-							<Button type="button" onClick={() => setOpenEditEpisode(false)}>Cancel</Button>
+							<Button variant="secondary" type="button" onClick={() => setOpenEditEpisode(false)}>Cancel</Button>
 							<Button type="submit">Save</Button>
 						</DialogFooter>
 					</form>
@@ -313,7 +313,7 @@ function TvShowDetails() {
 					</p>
 
 					<DialogFooter className="mt-6">
-						<Button onClick={() => setOpenDeleteEpisode(false)}>Cancel</Button>
+						<Button variant="secondary" onClick={() => setOpenDeleteEpisode(false)}>Cancel</Button>
 						<Button variant="destructive" onClick={handleDeleteEpisode}>
 							Delete
 						</Button>

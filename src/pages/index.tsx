@@ -107,7 +107,7 @@ export default function Home() {
 						<Input name="recommendedAge" type="number" placeholder="Recommended Age" />
 
 						<DialogFooter>
-							<Button type="button" variant="destructive" onClick={() => setOpenAdd(false)}>
+							<Button type="button" variant="secondary" onClick={() => setOpenAdd(false)}>
 								Cancel
 							</Button>
 							<Button type="submit">Save</Button>
@@ -134,7 +134,7 @@ export default function Home() {
 						/>
 
 						<DialogFooter>
-							<Button type="button" variant="destructive" onClick={() => setOpenEdit(false)}>
+							<Button type="button" variant="secondary" onClick={() => setOpenEdit(false)}>
 								Cancel
 							</Button>
 							<Button type="submit">Save</Button>
@@ -155,10 +155,10 @@ export default function Home() {
 					</p>
 
 					<DialogFooter className="mt-6">
-						<Button variant="destructive" onClick={() => setOpenDelete(false)}>
+						<Button variant="secondary" onClick={() => setOpenDelete(false)}>
 							Cancel
 						</Button>
-						<Button onClick={handleDeleteConfirm}>
+						<Button variant="destructive" onClick={handleDeleteConfirm}>
 							Delete
 						</Button>
 					</DialogFooter>
