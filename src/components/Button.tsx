@@ -26,7 +26,7 @@ export default function Button({
 	return (
 		<button
 			className={`
-        h-10 rounded-lg
+        h-10 w-full md:w-auto rounded-lg
         flex items-center justify-center gap-3
         text-neutral font-semibold
         transition-opacity hover:opacity-90
