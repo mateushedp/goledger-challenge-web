@@ -14,6 +14,9 @@ export default {
 				headline: "#E2E2E8",
 				body: "#C6C6CB",
 				label: "#C6C6CB",
+				background: "#111317",
+				foreground: "#C6C6CB",
+				border: "#45474b",
 			},
 			fontFamily: {
 				sans: ["Manrope", "sans-serif"],
