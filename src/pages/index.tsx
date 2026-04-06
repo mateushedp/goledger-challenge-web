@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getTvShows, createTvShow, deleteTvShow, updateTvShow } from "@/services/tvShows";
 import { TvShow } from "@/types/tvShow";
-import TvShowCard from "@/components/TvShowCard";
-import Spinner from "@/components/Spinner";
-import Button from "@/components/Button";
+import TvShowCard from "@/components/ui/TvShowCard";
+import Spinner from "@/components/ui/Spinner";
+import Button from "@/components/ui/Button";
 import { Plus, Edit, Trash } from "lucide-react";
 import {
 	Dialog,

@@ -3,9 +3,9 @@ import { getWatchlists, createWatchlist, updateWatchlist, deleteWatchlist } from
 import { getTvShows } from "@/services/tvShows";
 import { Watchlist } from "@/types/watchlist";
 import { TvShow } from "@/types/tvShow";
-import { WatchlistItem } from "@/components/WatchlistItem";
-import Spinner from "@/components/Spinner";
-import Button from "@/components/Button";
+import { WatchlistItem } from "@/components/ui/WatchlistItem";
+import Spinner from "@/components/ui/Spinner";
+import Button from "@/components/ui/Button";
 import { Plus, Edit, Trash } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";

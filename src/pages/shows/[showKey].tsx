@@ -9,9 +9,9 @@ import {
 } from "@/services/seasons";
 import { getTvShowByKey } from "@/services/tvShows";
 import { TvShow } from "@/types/tvShow";
-import { EpisodeItem } from "@/components/EpisodeItem";
-import Spinner from "@/components/Spinner";
-import Button from "@/components/Button";
+import { EpisodeItem } from "@/components/ui/EpisodeItem";
+import Spinner from "@/components/ui/Spinner";
+import Button from "@/components/ui/Button";
 import {
 	Dialog,
 	DialogContent,
