@@ -34,8 +34,6 @@ NEXT_PUBLIC_API_USER=<your-basic-auth-username>
 NEXT_PUBLIC_API_PASSWORD=<your-basic-auth-password>
 ```
 
-> ⚠️ The API credentials were sent to you by email. Do **not** commit `.env.local` to version control.
-
 ### Running Locally
 
 ```bash
