@@ -10,6 +10,7 @@ const eslintConfig = defineConfig([
 			"indent": ["error", "tab", { 
 				"SwitchCase": 1, 
 			}],
+			"@typescript-eslint/indent": ["error", "tab"],
 			"no-mixed-spaces-and-tabs": "error",
 			"quotes": ["error", "double"],
 			"semi": ["error", "always"],
