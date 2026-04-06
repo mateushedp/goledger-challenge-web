@@ -1,6 +1,4 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import { Toaster } from "@/components/ui/sonner"
-
 
 export default function Document() {
 	return (
@@ -9,7 +7,6 @@ export default function Document() {
 			<body className="antialiased">
 				<Main />
 				<NextScript />
-				<Toaster />
 			</body>
 		</Html>
 	);
