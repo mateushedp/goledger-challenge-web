@@ -1,5 +1,6 @@
 import { apiFetch } from "./api";
-import type { Season, SeasonInput, SeasonApiResponse } from "@/types/seasons";
+import type { Season, SeasonInput, SeasonApiResponse, SeasonWithEpisodes } from "@/types/seasons";
+import { getEpisodes } from "./episodes";
 
 function mapSeason(item: SeasonApiResponse): Season {
 	return {
@@ -8,6 +9,25 @@ function mapSeason(item: SeasonApiResponse): Season {
 		tvShow: item.tvShow,
 		year: item.year,
 	};
+}
+
+export async function getSeasonsWithEpisodes(
+	tvShowKey: string,
+): Promise<SeasonWithEpisodes[]> {
+	const seasons = await getSeasons(tvShowKey);
+
+	const result = await Promise.all(
+		seasons.map(async (season) => {
+			const episodes = await getEpisodes(season.key);
+
+			return {
+				...season,
+				episodes,
+			};
+		}),
+	);
+
+	return result;
 }
 
 export async function getSeasons(tvShowKey: string): Promise<Season[]> {
