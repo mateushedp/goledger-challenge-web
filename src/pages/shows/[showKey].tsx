@@ -304,7 +304,7 @@ function TvShowDetails() {
 						<Input name="title" placeholder="Title" />
 						<Input name="releaseDate" type="date" />
 						<Textarea name="description" placeholder="Description" />
-						<Input name="rating" type="number" placeholder="Rating" />
+						<Input name="rating" type="number" step="0.1" placeholder="Rating" />
 
 						<DialogFooter>
 							<Button variant="secondary" type="button" onClick={() => setOpenAddEpisode(false)} disabled={isSubmitting}>
@@ -329,7 +329,7 @@ function TvShowDetails() {
 						<Input name="title" defaultValue={selectedEpisode?.title} />
 						<Input name="releaseDate" type="date" defaultValue={selectedEpisode?.releaseDate?.split("T")[0]} />
 						<Textarea name="description" defaultValue={selectedEpisode?.description} />
-						<Input name="rating" type="number" defaultValue={selectedEpisode?.rating} />
+						<Input name="rating" type="number" step="0.1" defaultValue={selectedEpisode?.rating} />
 
 						<DialogFooter>
 							<Button variant="secondary" type="button" onClick={() => setOpenEditEpisode(false)} disabled={isSubmitting}>
