@@ -6,6 +6,7 @@ interface TvShowCardProps {
 	description: string;
 	recommendedAge: number;
 	numberOfSeasons?: number;
+	children?: React.ReactNode;
 }
 
 export default function TvShowCard({
@@ -14,38 +15,51 @@ export default function TvShowCard({
 	description,
 	recommendedAge,
 	numberOfSeasons = 0,
+	children,
 }: TvShowCardProps) {
 	return (
-		<Link
-			href={`/shows/${showKey}`}
+		<div
 			className="
+        relative
         flex flex-col
-        min-h-[170px]
+        min-h-[330px]
         py-6 border-b border-[#45474b]/20
         md:p-6 md:rounded-lg md:border md:border-[#45474b]/20
         transition-colors hover:border-primary/40
       "
 		>
-			<h3 className="text-2xl md:text-lg font-semibold text-headline">
-				{title}
-			</h3>
+			<Link href={`/shows/${showKey}`} className="contents">
+				<h3 className="text-2xl md:text-lg font-semibold text-headline">
+					{title}
+				</h3>
 
-			<div className="flex items-center gap-4 mt-4 md:hidden text-[10px]">
-				<span className="font-semibold text-primary">
-					{recommendedAge}+
-				</span>
-				<span className="text-body">
-					{numberOfSeasons} {numberOfSeasons === 1 ? "season" : "seasons"}
-				</span>
-			</div>
+				<div className="flex items-center gap-4 mt-4 md:hidden text-[10px]">
+					<span className="font-semibold text-primary">
+						{recommendedAge}+
+					</span>
+					<span className="text-body">
+						{numberOfSeasons} {numberOfSeasons === 1 ? "season" : "seasons"}
+					</span>
+				</div>
 
-			<p className="text-sm font-light text-body mt-4 md:overflow-hidden md:text-ellipsis md:line-clamp-3">
-				{description}
-			</p>
+				<p className="text-sm font-light text-body mt-4 md:overflow-hidden md:text-ellipsis md:line-clamp-3">
+					{description}
+				</p>
 
-			<div className="hidden md:block text-xs text-body/60 mt-6">
-				{recommendedAge}+ • {numberOfSeasons} {numberOfSeasons === 1 ? "season" : "seasons"}
-			</div>
-		</Link>
+				<div className="hidden md:block text-xs text-body/60 mt-6">
+					{recommendedAge}+ • {numberOfSeasons}{" "}
+					{numberOfSeasons === 1 ? "season" : "seasons"}
+				</div>
+			</Link>
+
+			{children && (
+				<div
+					className="mt-auto flex flex-col gap-2 z-10"
+					onClick={(e) => e.stopPropagation()}
+				>
+					{children}
+				</div>
+			)}
+		</div>
 	);
 }
