@@ -58,23 +58,27 @@ export async function createTvShow(input: TvShowInput): Promise<TvShow> {
 	return mapTvShow(data[0]);
 }
 
-export async function deleteTvShow(title: string): Promise<void> {
+export async function deleteTvShow(key: string): Promise<void> {
 	await apiFetch("/api/invoke/deleteAsset", {
 		method: "POST",
 		body: JSON.stringify({
 			key: {
+				"@key": key,
 				"@assetType": "tvShows",
-				title: title,
 			},
 		}),
 	});
 }
 
-export async function updateTvShow(input: TvShowInput): Promise<TvShow> {
+export async function updateTvShow(
+	key: string,
+	input: TvShowInput
+): Promise<TvShow> {
 	const data = await apiFetch("/api/invoke/updateAsset", {
 		method: "POST",
 		body: JSON.stringify({
 			update: {
+				"@key": key,
 				"@assetType": "tvShows",
 				...input,
 			},
