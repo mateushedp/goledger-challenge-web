@@ -7,9 +7,9 @@ import { WatchlistItem } from "@/components/ui/WatchlistItem";
 import Spinner from "@/components/ui/Spinner";
 import Button from "@/components/ui/Button";
 import { Plus, Edit, Trash } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/Dialog";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 import { toast } from "sonner";
 
 export default function WatchlistPage() {

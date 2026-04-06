@@ -14,9 +14,9 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/Dialog";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { toast } from "sonner";
 
 export default function Home() {
