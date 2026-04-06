@@ -15,8 +15,8 @@ A web application built with **Next.js** that provides a full CRUD interface for
 
 ```bash
 # 1. Clone your forked repository
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com//mateushedp/goledger-challenge-web.git
+cd <goledger-challenge-web>
 
 # 2. Install dependencies
 npm install
