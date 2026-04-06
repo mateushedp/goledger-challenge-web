@@ -25,6 +25,24 @@ export async function getTvShows(): Promise<TvShow[]> {
 	return data.result.map(mapTvShow);
 }
 
+export async function getTvShowByKey(key: string): Promise<TvShow | null> {
+	const data = await apiFetch("/api/query/search", {
+		method: "POST",
+		body: JSON.stringify({
+			query: {
+				selector: {
+					"@assetType": "tvShows",
+					"@key": key,
+				},
+			},
+		}),
+	});
+
+	if (!data.result.length) return null;
+
+	return mapTvShow(data.result[0]);
+}
+
 export async function createTvShow(input: TvShowInput): Promise<TvShow> {
 	const data = await apiFetch("/api/invoke/createAsset", {
 		method: "POST",
