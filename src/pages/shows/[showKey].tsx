@@ -378,7 +378,10 @@ function TvShowDetails() {
 						Add Season
 					</Button>
 				</div>
+
+
 			</div>
+
 
 			<div className="mt-4 md:h-[49px] flex flex-col md:flex-row items-start md:items-center justify-end gap-2 px-8 border-b border-[#45474b]/20">
 				{selectedSeason && (
@@ -397,6 +400,9 @@ function TvShowDetails() {
 					</>
 				)}
 			</div>
+			<span className="md:ml-8 text-[12px] font-extrabold uppercase text-body">
+				season released: {selectedSeason?.year}
+			</span>
 
 			{!episodes.length ? (
 				<p className="text-[14px] font-extrabold text-center my-5 italic text-body">
