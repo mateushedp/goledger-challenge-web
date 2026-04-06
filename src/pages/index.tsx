@@ -23,6 +23,7 @@ export default function Home() {
 
 	const [shows, setShows] = useState<TvShow[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const [openAdd, setOpenAdd] = useState(false);
@@ -46,10 +47,12 @@ export default function Home() {
 			setError("Failed to load TV shows.");
 		} finally {
 			setIsLoading(false);
+			setIsSubmitting(false);
 		}
 	}
 
 	async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
+		setIsSubmitting(true);
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
@@ -65,6 +68,7 @@ export default function Home() {
 	}
 
 	async function handleEdit(e: React.FormEvent<HTMLFormElement>) {
+		setIsSubmitting(true);
 		e.preventDefault();
 
 		if (!selectedShow) return;
@@ -82,6 +86,7 @@ export default function Home() {
 	}
 
 	async function handleDeleteConfirm() {
+		setIsSubmitting(true);
 		if (!selectedShow) return;
 
 		await deleteTvShow(selectedShow.key);
@@ -107,10 +112,10 @@ export default function Home() {
 						<Input name="recommendedAge" type="number" placeholder="Recommended Age" />
 
 						<DialogFooter>
-							<Button type="button" variant="secondary" onClick={() => setOpenAdd(false)}>
+							<Button type="button" variant="secondary" onClick={() => setOpenAdd(false)} disabled={isSubmitting}>
 								Cancel
 							</Button>
-							<Button type="submit">Save</Button>
+							<Button type="submit" isLoading={isSubmitting}>Save</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -134,10 +139,10 @@ export default function Home() {
 						/>
 
 						<DialogFooter>
-							<Button type="button" variant="secondary" onClick={() => setOpenEdit(false)}>
+							<Button type="button" variant="secondary" onClick={() => setOpenEdit(false)} disabled={isSubmitting}>
 								Cancel
 							</Button>
-							<Button type="submit">Save</Button>
+							<Button type="submit" isLoading={isSubmitting}>Save</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -155,10 +160,10 @@ export default function Home() {
 					</p>
 
 					<DialogFooter className="mt-6">
-						<Button variant="secondary" onClick={() => setOpenDelete(false)}>
+						<Button variant="secondary" onClick={() => setOpenDelete(false)} disabled={isSubmitting}>
 							Cancel
 						</Button>
-						<Button variant="destructive" onClick={handleDeleteConfirm}>
+						<Button variant="destructive" onClick={handleDeleteConfirm} isLoading={isSubmitting}>
 							Delete
 						</Button>
 					</DialogFooter>

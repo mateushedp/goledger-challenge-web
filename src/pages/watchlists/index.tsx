@@ -23,6 +23,7 @@ export default function WatchlistPage() {
 	const [shows, setShows] = useState<TvShow[]>([]);
 	const [showsMap, setShowsMap] = useState<Record<string, string>>({});
 	const [isLoading, setIsLoading] = useState(true);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [selected, setSelected] = useState<Watchlist | null>(null);
 
@@ -30,10 +31,8 @@ export default function WatchlistPage() {
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
 
-	useEffect(() => {
-		async function load() {
-			setIsLoading(true);
-
+	async function loadData() {
+		try {
 			const [w, s] = await Promise.all([
 				getWatchlists(),
 				getTvShows(),
@@ -47,20 +46,27 @@ export default function WatchlistPage() {
 				map[show.key] = show.title;
 			});
 			setShowsMap(map);
+		} catch (err) {
+			console.error("Failed to load data:", err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}
 
+	useEffect(() => {
+		async function init() {
+			setIsLoading(true);
+			await loadData();
 			setIsLoading(false);
 		}
 
-		load();
+		init();
 	}, []);
-
-	async function refresh() {
-		const w = await getWatchlists();
-		setData(w);
-	}
 
 	async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		setIsSubmitting(true);
+
 		const formData = new FormData(e.currentTarget);
 
 		await createWatchlist({
@@ -69,13 +75,15 @@ export default function WatchlistPage() {
 			tvShows: [],
 		});
 
+		await loadData();
 		setOpenCreate(false);
-		await refresh();
 	}
 
 	async function handleEdit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		if (!selected) return;
+
+		setIsSubmitting(true);
 
 		const formData = new FormData(e.currentTarget);
 
@@ -85,17 +93,19 @@ export default function WatchlistPage() {
 			tvShows: selected.tvShows,
 		});
 
+		await loadData();
 		setOpenEdit(false);
-		await refresh();
 	}
 
 	async function handleDelete() {
 		if (!selected) return;
 
+		setIsSubmitting(true);
+
 		await deleteWatchlist(selected.title);
 
+		await loadData();
 		setOpenDelete(false);
-		await refresh();
 	}
 
 	function toggleShow(showKey: string) {
@@ -137,9 +147,9 @@ export default function WatchlistPage() {
 
 						<DialogFooter>
 							<DialogClose asChild>
-								<Button variant="secondary">Cancel</Button>
+								<Button variant="secondary" disabled={isSubmitting}>Cancel</Button>
 							</DialogClose>
-							<Button type="submit">Create</Button>
+							<Button type="submit" isLoading={isSubmitting}>Create</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -198,9 +208,9 @@ export default function WatchlistPage() {
 
 						<DialogFooter>
 							<DialogClose asChild>
-								<Button variant="secondary">Cancel</Button>
+								<Button variant="secondary" disabled={isSubmitting}>Cancel</Button>
 							</DialogClose>
-							<Button type="submit">Save</Button>
+							<Button type="submit" isLoading={isSubmitting}>Save</Button>
 						</DialogFooter>
 					</form>
 				</DialogContent>
@@ -216,9 +226,9 @@ export default function WatchlistPage() {
 
 					<DialogFooter>
 						<DialogClose asChild>
-							<Button variant="secondary">Cancel</Button>
+							<Button variant="secondary" disabled={isSubmitting}>Cancel</Button>
 						</DialogClose>
-						<Button variant="destructive" onClick={handleDelete}>
+						<Button variant="destructive" onClick={handleDelete} isLoading={isSubmitting}>
 							Delete
 						</Button>
 					</DialogFooter>
@@ -269,6 +279,7 @@ export default function WatchlistPage() {
 					</WatchlistItem>
 				))}
 			</div>
+
 			<div className="m-4 flex justify-center md:w-auto">
 				<Button icon={<Plus />} onClick={() => setOpenCreate(true)}>
 					Add Watchlist
