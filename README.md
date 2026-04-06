@@ -1,40 +1,142 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 📺 GoLedger TV Shows — IMDB-like Blockchain Interface
 
-## Getting Started
+A web application built with **Next.js** that provides a full CRUD interface for managing TV Shows, Seasons, Episodes, and Watchlists on a blockchain backend via REST API.
 
-First, run the development server:
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js **18+**
+- npm or yarn
+
+### Installation
+
+```bash
+# 1. Clone your forked repository
+git clone https://github.com/<your-username>/<repo-name>.git
+cd <repo-name>
+
+# 2. Install dependencies
+npm install
+# or
+yarn install
+```
+
+### Environment Variables
+
+Create a `.env.local` file at the root of the project:
+
+```env
+NEXT_PUBLIC_API_URL=http://<api-host>
+NEXT_PUBLIC_API_USER=<your-basic-auth-username>
+NEXT_PUBLIC_API_PASSWORD=<your-basic-auth-password>
+```
+
+> ⚠️ The API credentials were sent to you by email. Do **not** commit `.env.local` to version control.
+
+### Running Locally
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🗂️ Project Structure
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+```
+src/
+├── components/
+│   └── ui/               # Reusable UI components (Button, Dialog, Input, etc.)
+├── pages/
+│   ├── index.tsx          # TV Shows listing page
+│   ├── watchlist.tsx      # Watchlists page
+│   └── [showKey].tsx      # TV Show details (seasons + episodes)
+├── services/
+│   ├── tvShows.ts         # API calls for TV Shows
+│   ├── seasons.ts         # API calls for Seasons
+│   ├── episodes.ts        # API calls for Episodes
+│   └── watchlists.ts      # API calls for Watchlists
+└── types/
+    ├── tvShow.ts
+    ├── seasons.ts
+    ├── episodes.ts
+    └── watchlist.ts
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📖 Features & Usage
 
-To learn more about Next.js, take a look at the following resources:
+### TV Shows (`/`)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+The home page lists all registered TV Shows.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Action | How |
+|--------|-----|
+| **Browse** | All shows are displayed as cards on the main page |
+| **Add** | Click **"Add New TV Show"** button (bottom of page) |
+| **Edit** | Click **"Edit"** on any show card (updates description and recommended age) |
+| **Delete** | Click **"Delete"** on any show card |
+| **View Details** | Click anywhere on the card to open the show's detail page |
 
-## Deploy on Vercel
+> ℹ️ The **title** of a TV Show cannot be changed after creation, as it acts as the asset key on the blockchain.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### TV Show Details (`/shows/[showKey]`)
+
+Opened by clicking a TV Show card. Displays the show's title, description, recommended age, and its seasons/episodes.
+
+#### Seasons
+
+| Action | How |
+|--------|-----|
+| **Browse** | Season tabs are shown in the top navigation bar of the detail page |
+| **Add** | Click **"Add Season"** (top right of seasons bar) — requires a season number and year |
+| **Edit** | Click **"Edit Season"** — allows updating the year |
+| **Delete** | Click **"Delete Season"** — removes the season and all its episodes |
+
+> ℹ️ Season **number** is immutable after creation.
+
+#### Episodes
+
+Displayed below the selected season tab, sorted by episode number.
+
+| Action | How |
+|--------|-----|
+| **Browse** | Listed under the active season |
+| **Add** | Click **"Add Episode"** — fill in episode number, title, release date, description, and optional rating |
+| **Edit** | Click **"Edit"** on an episode row — all fields except episode number can be changed |
+| **Delete** | Click **"Delete"** on an episode row |
+
+---
+
+### Watchlists (`/watchlists`)
+
+Manage curated lists of TV Shows.
+
+| Action | How |
+|--------|-----|
+| **Browse** | All watchlists are shown as cards |
+| **Create** | Click **"Add Watchlist"** — provide a title and optional description. Shows cannot be added during creation |
+| **Edit** | Click **"Edit"** on a watchlist card — update description and toggle which TV Shows are included |
+| **Delete** | Click **"Delete"** on a watchlist card |
+
+> ⚠️ TV Shows can only be added to a Watchlist through the **Edit** dialog, not during creation.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Next.js** (React framework)
+- **TypeScript**
+- **Tailwind CSS** (utility-first styling)
+- **Lucide React** (icons)
+- **Sonner** (toast notifications)
