@@ -5,7 +5,6 @@ interface TvShowCardProps {
 	title: string;
 	description: string;
 	recommendedAge: number;
-	numberOfSeasons?: number;
 	children?: React.ReactNode;
 }
 
@@ -14,7 +13,6 @@ export default function TvShowCard({
 	title,
 	description,
 	recommendedAge,
-	numberOfSeasons = 0,
 	children,
 }: TvShowCardProps) {
 	return (
@@ -37,9 +35,6 @@ export default function TvShowCard({
 					<span className="font-semibold text-primary">
 						{recommendedAge}+
 					</span>
-					<span className="text-body">
-						{numberOfSeasons} {numberOfSeasons === 1 ? "season" : "seasons"}
-					</span>
 				</div>
 
 				<p className="text-sm font-light text-body mt-4 md:overflow-hidden md:text-ellipsis md:line-clamp-3">
@@ -47,8 +42,7 @@ export default function TvShowCard({
 				</p>
 
 				<div className="hidden md:block text-xs text-body/60 mt-6">
-					{recommendedAge}+ • {numberOfSeasons}{" "}
-					{numberOfSeasons === 1 ? "season" : "seasons"}
+					Recommended age: {recommendedAge}+
 				</div>
 			</Link>
 
